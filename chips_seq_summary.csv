@@ -1,0 +1,5 @@
+SampleID,Factor,Treatment,Replicate,bamReads,ControlID,bamControl,Peaks,PeakCaller
+GR_U_rep1,GR,U,1,./rep1/01_GR_U_chr19_rep1.bam,GR_input,./input/GR_input.bam,./rep1/01_GR_U_chr19_rep1.bed,bed
+GR_D_rep1,GR,D,1,./rep1/02_GR_D_chr19_rep1.bam,GR_input,./input/GR_input.bam,./rep1/02_GR_D_chr19_rep1.bed,bed
+GR_U_rep2,GR,U,2,./rep2/01_GR_U_chr19_rep2.bam,GR_input,./input/GR_input.bam,./rep2/01_GR_U_chr19_rep2.bed,bed
+GR_D_rep2,GR,D,2,./rep2/02_GR_D_chr19_rep2.bam,GR_input,./input/GR_input.bam,./rep2/02_GR_D_chr19_rep2.bed,bed

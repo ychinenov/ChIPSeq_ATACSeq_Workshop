@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<!-- Created by igraph -->
+  <key id="v_name" for="node" attr.name="name" attr.type="string"/>
+  <key id="v_size" for="node" attr.name="size" attr.type="double"/>
+  <key id="v_color" for="node" attr.name="color" attr.type="string"/>
+  <key id="v_label" for="node" attr.name="label" attr.type="string"/>
+  <key id="e_width" for="edge" attr.name="width" attr.type="double"/>
+  <key id="e_color" for="edge" attr.name="color" attr.type="string"/>
+  <graph id="G" edgedefault="undirected">
+    <node id="n0">
+      <data key="v_name">regulation of defense response</data>
+      <data key="v_size">21.775206925604</data>
+      <data key="v_color">#E5C494</data>
+      <data key="v_label">regulation of defense response</data>
+    </node>
+    <node id="n1">
+      <data key="v_name">regulation of tumor necrosis factor production</data>
+      <data key="v_size">19.7677035221871</data>
+      <data key="v_color">#E5C494</data>
+      <data key="v_label">regulation of tumor necrosis factor production</data>
+    </node>
+    <node id="n2">
+      <data key="v_name">tumor necrosis factor production</data>
+      <data key="v_size">19.6456291017951</data>
+      <data key="v_color">#E5C494</data>
+      <data key="v_label">tumor necrosis factor production</data>
+    </node>
+    <node id="n3">
+      <data key="v_name">regulation of tumor necrosis factor superfamily cytokine production</data>
+      <data key="v_size">19.5247810873363</data>
+      <data key="v_color">#E5C494</data>
+      <data key="v_label">regulation of tumor necrosis factor superfamily cytokine production</data>
+    </node>
+    <node id="n4">
+      <data key="v_name">tumor necrosis factor superfamily cytokine production</data>
+      <data key="v_size">19.2866793630775</data>
+      <data key="v_color">#E5C494</data>
+      <data key="v_label">tumor necrosis factor superfamily cytokine production</data>
+    </node>
+    <node id="n5">
+      <data key="v_name">Il1r1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B3B3B3</data>
+      <data key="v_label">Il1r1</data>
+    </node>
+    <node id="n6">
+      <data key="v_name">Rab7b</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B3B3B3</data>
+      <data key="v_label">Rab7b</data>
+    </node>
+    <node id="n7">
+      <data key="v_name">Tlr5</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C9A094</data>
+      <data key="v_label">Tlr5</data>
+    </node>
+    <node id="n8">
+      <data key="v_name">Tlr2</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#A4C5A2</data>
+      <data key="v_label">Tlr2</data>
+    </node>
+    <node id="n9">
+      <data key="v_name">S100a8</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B4B2B1</data>
+      <data key="v_label">S100a8</data>
+    </node>
+    <node id="n10">
+      <data key="v_name">Ctss</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B5B1B0</data>
+      <data key="v_label">Ctss</data>
+    </node>
+    <node id="n11">
+      <data key="v_name">Fcgr1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#A5C5A2</data>
+      <data key="v_label">Fcgr1</data>
+    </node>
+    <node id="n12">
+      <data key="v_name">Ptpn22</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C8A196</data>
+      <data key="v_label">Ptpn22</data>
+    </node>
+    <node id="n13">
+      <data key="v_name">Tlr4</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#A4C6A1</data>
+      <data key="v_label">Tlr4</data>
+    </node>
+    <node id="n14">
+      <data key="v_name">Zc3h12a</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#CB9E91</data>
+      <data key="v_label">Zc3h12a</data>
+    </node>
+    <node id="n15">
+      <data key="v_name">Tlr6</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#ACBCAB</data>
+      <data key="v_label">Tlr6</data>
+    </node>
+    <node id="n16">
+      <data key="v_name">Trpv4</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B7B0AE</data>
+      <data key="v_label">Trpv4</data>
+    </node>
+    <node id="n17">
+      <data key="v_name">Serpine1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C5A49A</data>
+      <data key="v_label">Serpine1</data>
+    </node>
+    <node id="n18">
+      <data key="v_name">Zfp36</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B3B3B2</data>
+      <data key="v_label">Zfp36</data>
+    </node>
+    <node id="n19">
+      <data key="v_name">Siglece</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#AFB9AE</data>
+      <data key="v_label">Siglece</data>
+    </node>
+    <node id="n20">
+      <data key="v_name">Pycard</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B4B2B1</data>
+      <data key="v_label">Pycard</data>
+    </node>
+    <node id="n21">
+      <data key="v_name">Htra1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B3B3B3</data>
+      <data key="v_label">Htra1</data>
+    </node>
+    <node id="n22">
+      <data key="v_name">Chid1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#A8C1A6</data>
+      <data key="v_label">Chid1</data>
+    </node>
+    <node id="n23">
+      <data key="v_name">Fadd</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#AABFA8</data>
+      <data key="v_label">Fadd</data>
+    </node>
+    <node id="n24">
+      <data key="v_name">Il12rb1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#BCACA8</data>
+      <data key="v_label">Il12rb1</data>
+    </node>
+    <node id="n25">
+      <data key="v_name">Cyba</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#ADBBAC</data>
+      <data key="v_label">Cyba</data>
+    </node>
+    <node id="n26">
+      <data key="v_name">Birc3</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C2A79F</data>
+      <data key="v_label">Birc3</data>
+    </node>
+    <node id="n27">
+      <data key="v_name">Acp5</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B6B1AF</data>
+      <data key="v_label">Acp5</data>
+    </node>
+    <node id="n28">
+      <data key="v_name">Gpx1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B8AFAD</data>
+      <data key="v_label">Gpx1</data>
+    </node>
+    <node id="n29">
+      <data key="v_name">Tnfaip3</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C1A7A0</data>
+      <data key="v_label">Tnfaip3</data>
+    </node>
+    <node id="n30">
+      <data key="v_name">Tbk1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C0A9A2</data>
+      <data key="v_label">Tbk1</data>
+    </node>
+    <node id="n31">
+      <data key="v_name">Havcr2</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C7A297</data>
+      <data key="v_label">Havcr2</data>
+    </node>
+    <node id="n32">
+      <data key="v_name">Nlrp3</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#9DCD9A</data>
+      <data key="v_label">Nlrp3</data>
+    </node>
+    <node id="n33">
+      <data key="v_name">Per1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#F14926</data>
+      <data key="v_label">Per1</data>
+    </node>
+    <node id="n34">
+      <data key="v_name">Cd300lf</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C8A196</data>
+      <data key="v_label">Cd300lf</data>
+    </node>
+    <node id="n35">
+      <data key="v_name">Nfkbia</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#DD836A</data>
+      <data key="v_label">Nfkbia</data>
+    </node>
+    <node id="n36">
+      <data key="v_name">Bcl6</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#32FF5C</data>
+      <data key="v_label">Bcl6</data>
+    </node>
+    <node id="n37">
+      <data key="v_name">Vav1</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#A9C0A8</data>
+      <data key="v_label">Vav1</data>
+    </node>
+    <node id="n38">
+      <data key="v_name">Cd14</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#C6A399</data>
+      <data key="v_label">Cd14</data>
+    </node>
+    <node id="n39">
+      <data key="v_name">Pdcd4</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#DC866E</data>
+      <data key="v_label">Pdcd4</data>
+    </node>
+    <node id="n40">
+      <data key="v_name">Tlr13</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#BBADA8</data>
+      <data key="v_label">Tlr13</data>
+    </node>
+    <node id="n41">
+      <data key="v_name">Cd84</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B5B2B1</data>
+      <data key="v_label">Cd84</data>
+    </node>
+    <node id="n42">
+      <data key="v_name">Cd36</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B7B0AE</data>
+      <data key="v_label">Cd36</data>
+    </node>
+    <node id="n43">
+      <data key="v_name">Gpnmb</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#A5C4A3</data>
+      <data key="v_label">Gpnmb</data>
+    </node>
+    <node id="n44">
+      <data key="v_name">Axl</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B3B3B3</data>
+      <data key="v_label">Axl</data>
+    </node>
+    <node id="n45">
+      <data key="v_name">Zbtb20</data>
+      <data key="v_size">8</data>
+      <data key="v_color">#B3B3B3</data>
+      <data key="v_label">Zbtb20</data>
+    </node>
+    <edge source="n0" target="n5">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n6">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n7">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n8">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n9">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n10">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n11">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n12">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n13">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n14">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n15">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n16">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n17">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n18">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n19">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n20">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n21">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n22">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n23">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n24">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n25">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n26">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n27">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n28">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n29">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n30">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n31">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n32">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n33">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n34">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n35">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n36">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n37">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n38">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n39">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n0" target="n40">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n41">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n8">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n12">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n13">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n14">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n42">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n43">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n44">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n18">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n20">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n23">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n25">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n27">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n29">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n31">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n45">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n1" target="n38">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n41">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n8">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n12">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n13">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n14">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n42">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n43">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n44">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n18">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n20">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n23">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n25">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n27">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n29">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n31">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n45">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n2" target="n38">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n41">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n8">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n12">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n13">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n14">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n42">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n43">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n44">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n18">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n20">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n23">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n25">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n27">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n29">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n31">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n45">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n3" target="n38">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n41">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n8">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n12">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n13">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n14">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n42">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n43">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n44">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n18">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n20">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n23">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n25">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n27">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n29">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n31">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n45">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+    <edge source="n4" target="n38">
+      <data key="e_width">2</data>
+      <data key="e_color">#8DA0CB</data>
+    </edge>
+  </graph>
+</graphml>
