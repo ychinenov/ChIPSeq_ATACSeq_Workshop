@@ -1,0 +1,17 @@
+MOTIF_INDEX	MOTIF_SOURCE	MOTIF_ID	ALT_ID	CONSENSUS	WIDTH	SITES	E-VALUE	E-VALUE_SOURCE	MOST_SIMILAR_MOTIF_SOURCE	MOST_SIMILAR_MOTIF	URL
+1	MEME	ASAGGAAGTRGRRRR	MEME-1	ASAGGAAGTRGRRRR	15	50	1.6e-016	MEME	db/JASPAR/JASPAR_CORE_2014_vertebrates.meme	MA0474.1 (Erg)	http://jaspar2014.genereg.net?ID=MA0474.1&rm=present&collection=CORE
+2	MEME	RGVACARAATGTYCT	MEME-2	RGVACARAATGTYCT	15	37	4.9e-010	MEME	db/JASPAR/JASPAR_CORE_2014_vertebrates.meme	MA0113.2 (NR3C1)	http://jaspar2014.genereg.net?ID=MA0113.2&rm=present&collection=CORE
+3	MEME	WMASARAACAMAGCA	MEME-3	WMASARAACAMAGCA	15	23	2.6e-009	MEME	db/JASPAR/JASPAR_CORE_2014_vertebrates.meme	MA0514.1 (Sox3)	http://jaspar2014.genereg.net?ID=MA0514.1&rm=present&collection=CORE
+4	db/EUKARYOTE/jolma2013.meme	NR3C2_DBD	 	KRGWACAYWRTGTWCYH	17	45	3.5e-005	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=NR3C2_DBD
+5	db/EUKARYOTE/jolma2013.meme	AR_DBD	 	DRGWACAYSRTGTWCCY	17	55	3.9e-005	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=AR_DBD
+6	MEME	RAAGCAGAAGB	MEME-4	RAAGCAGAAGB	11	22	7.3e-005	MEME	db/EUKARYOTE/jolma2013.meme	SPI1_full	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=SPI1_full
+7	db/EUKARYOTE/jolma2013.meme	NR3C1_DBD	 	DRGWACAYDRTGTWCYH	17	44	9.4e-005	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=NR3C1_DBD
+8	db/EUKARYOTE/jolma2013.meme	AR_full	 	RGGWACAYNGTGTWCYY	17	51	2.5e-004	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=AR_full
+9	db/EUKARYOTE/jolma2013.meme	Ar_DBD	 	DRGTACAYBRTGTACYN	17	74	6.9e-004	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=Ar_DBD
+10	db/JASPAR/JASPAR_CORE_2014_vertebrates.meme	MA0007.2	AR	ARGAACABWVTGTNC	15	114	1.1e-003	CENTRIMO	 	 	http://jaspar2014.genereg.net?ID=MA0007.2&rm=present&collection=CORE
+11	db/MOUSE/uniprobe_mouse.meme	UP00085_1	Sfpi1_primary	NDAWGVGGAAGTDN	14	126	1.1e-003	CENTRIMO	 	 	http://the_brain.bwh.harvard.edu/uniprobe/details2.php?id=00085
+12	db/EUKARYOTE/jolma2013.meme	ELK1_DBD_1	 	ACCGGAAGTD	10	100	1.7e-003	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=ELK1_DBD_1
+13	db/EUKARYOTE/jolma2013.meme	ETV5_DBD	 	ACCGGAWGYN	10	120	4.0e-003	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=ETV5_DBD
+14	DREME	RGGAA	DREME-1	RGGAA	5	162	8.8e-003	DREME	db/JASPAR/JASPAR_CORE_2014_vertebrates.meme	MA0137.3 (STAT1)	http://jaspar2014.genereg.net?ID=MA0137.3&rm=present&collection=CORE
+15	db/EUKARYOTE/jolma2013.meme	ETV4_DBD	 	ACCGGAAGTR	10	118	1.5e-002	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=ETV4_DBD
+16	db/EUKARYOTE/jolma2013.meme	ETV1_DBD	 	ACCGGAAGTD	10	114	1.8e-002	CENTRIMO	 	 	http://floresta.eead.csic.es/footprintdb/index.php?db=HumanTF:1.0&motif=ETV1_DBD

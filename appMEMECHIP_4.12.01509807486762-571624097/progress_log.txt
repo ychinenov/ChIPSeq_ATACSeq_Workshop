@@ -1,0 +1,82 @@
+Invoking:
+  getsize ./gr_d_union.fasta 1> $metrics
+Finished invoke:
+  name: count_seqs  status: 0  time: 0.003274
+Invoking:
+  fasta-most -min 50 < ./gr_d_union.fasta 1> $metrics
+Finished invoke:
+  name: most_seqs  status: 0  time: 0.043448
+Invoking:
+  fasta-center -dna -len 100 < ./gr_d_union.fasta 1> ./seqs-centered
+Finished invoke:
+  name: center_seqs  status: 0  time: 0.052403
+Invoking:
+  fasta-shuffle-letters ./seqs-centered ./seqs-shuffled -kmer 2 -tag -dinuc -dna -seed 1
+Finished invoke:
+  name: shuffle_seqs  status: 0  time: 0.002686
+Invoking:
+  fasta-get-markov -nostatus -nosummary -dna -m 1 ./gr_d_union.fasta ./background
+Finished invoke:
+  name: bg  status: 0  time: 0.002026
+Invoking:
+  meme ./seqs-centered -oc meme_out -mod anr -nmotifs 5 -minw 6 -maxw 20 -bfile ./background -dna -time 5082 -revcomp -nostatus
+Finished invoke:
+  name: meme  status: 0  time: 82.995636
+Invoking:
+  dreme -v 1 -oc dreme_out -png -dna -p ./seqs-centered -n ./seqs-shuffled -t 7106 -e 0.05
+Finished invoke:
+  name: dreme  status: 0  time: 2.151025
+Invoking:
+  centrimo -seqlen 479 -verbosity 1 -oc centrimo_out -bfile ./background -score 5.0 -ethresh 10.0 ./gr_d_union.fasta meme_out/meme.xml dreme_out/dreme.xml db/EUKARYOTE/jolma2013.meme db/JASPAR/JASPAR_CORE_2014_vertebrates.meme db/MOUSE/uniprobe_mouse.meme
+Finished invoke:
+  name: centrimo  status: 0  time: 5.559802
+Invoking:
+  tomtom -verbosity 1 -oc meme_tomtom_out -min-overlap 5 -dist pearson -evalue -thresh 1 -no-ssc -bfile ./background meme_out/meme.xml db/EUKARYOTE/jolma2013.meme db/JASPAR/JASPAR_CORE_2014_vertebrates.meme db/MOUSE/uniprobe_mouse.meme
+Finished invoke:
+  name: meme_tomtom  status: 0  time: 11.803035
+Invoking:
+  tomtom -verbosity 1 -oc dreme_tomtom_out -min-overlap 5 -dist pearson -evalue -thresh 1 -no-ssc -bfile ./background dreme_out/dreme.xml db/EUKARYOTE/jolma2013.meme db/JASPAR/JASPAR_CORE_2014_vertebrates.meme db/MOUSE/uniprobe_mouse.meme
+Finished invoke:
+  name: dreme_tomtom  status: 0  time: 0.838421
+Invoking:
+  tomtom -verbosity 1 -text -thresh 0.1 ./combined.meme ./combined.meme 1> ./motif_alignment.txt
+Finished invoke:
+  name: align  status: 0  time: 0.49442
+Invoking:
+  spamo -verbosity 1 -oc spamo_out_1 -bgfile ./background -primary ASAGGAAGTRGRRRR ./gr_d_union.fasta meme_out/meme.xml meme_out/meme.xml dreme_out/dreme.xml db/EUKARYOTE/jolma2013.meme db/JASPAR/JASPAR_CORE_2014_vertebrates.meme db/MOUSE/uniprobe_mouse.meme
+Finished invoke:
+  name: spamo1  status: 0  time: 11.862286
+Invoking:
+  spamo -verbosity 1 -oc spamo_out_2 -bgfile ./background -primary RGVACARAATGTYCT ./gr_d_union.fasta meme_out/meme.xml meme_out/meme.xml dreme_out/dreme.xml db/EUKARYOTE/jolma2013.meme db/JASPAR/JASPAR_CORE_2014_vertebrates.meme db/MOUSE/uniprobe_mouse.meme
+Finished invoke:
+  name: spamo2  status: 0  time: 10.474388
+Invoking:
+  spamo -verbosity 1 -oc spamo_out_3 -bgfile ./background -primary WMASARAACAMAGCA ./gr_d_union.fasta meme_out/meme.xml meme_out/meme.xml dreme_out/dreme.xml db/EUKARYOTE/jolma2013.meme db/JASPAR/JASPAR_CORE_2014_vertebrates.meme db/MOUSE/uniprobe_mouse.meme
+Finished invoke:
+  name: spamo3  status: 0  time: 7.100855
+Invoking:
+  spamo -verbosity 1 -oc spamo_out_4 -bgfile ./background -primary RAAGCAGAAGB ./gr_d_union.fasta meme_out/meme.xml meme_out/meme.xml dreme_out/dreme.xml db/EUKARYOTE/jolma2013.meme db/JASPAR/JASPAR_CORE_2014_vertebrates.meme db/MOUSE/uniprobe_mouse.meme
+Finished invoke:
+  name: spamo4  status: 0  time: 7.895172
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc fimo_out_1 --bgfile ./background --motif ASAGGAAGTRGRRRR meme_out/meme.xml ./gr_d_union.fasta
+Finished invoke:
+  name: fimo1  status: 0  time: 0.070311
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc fimo_out_2 --bgfile ./background --motif RGVACARAATGTYCT meme_out/meme.xml ./gr_d_union.fasta
+Finished invoke:
+  name: fimo2  status: 0  time: 0.069729
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc fimo_out_3 --bgfile ./background --motif WMASARAACAMAGCA meme_out/meme.xml ./gr_d_union.fasta
+Finished invoke:
+  name: fimo3  status: 0  time: 0.070045
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc fimo_out_4 --bgfile ./background --motif RAAGCAGAAGB meme_out/meme.xml ./gr_d_union.fasta
+Finished invoke:
+  name: fimo4  status: 0  time: 0.068903
+Writing output
+Invoking:
+  meme-chip_html_to_tsv ./meme-chip.html ./summary.tsv
+Finished invoke:
+  name: summary  status: 0  time: 0.161308
+Done

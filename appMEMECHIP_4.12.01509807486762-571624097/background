@@ -1,0 +1,24 @@
+# 1-order Markov frequencies from file ./gr_d_union.fasta
+# seqs: 127    min: 479    max: 479    avg: 479.0    sum: 60833    alph: DNA
+# order 0
+A 2.706e-01
+C 2.294e-01
+G 2.294e-01
+T 2.706e-01
+# order 1
+AA 8.125e-02
+AC 5.608e-02
+AG 7.945e-02
+AT 5.382e-02
+CA 7.937e-02
+CC 5.906e-02
+CG 1.153e-02
+CT 7.945e-02
+GA 6.463e-02
+GC 4.973e-02
+GG 5.906e-02
+GT 5.608e-02
+TA 4.523e-02
+TC 6.463e-02
+TG 7.937e-02
+TT 8.125e-02
