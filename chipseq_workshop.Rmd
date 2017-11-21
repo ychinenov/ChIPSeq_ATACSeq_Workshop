@@ -1,6 +1,6 @@
 ---
 title: "ChipSeq/Atacseq"
-author: "Yurii Chinenov & David Oliver"
+author: "Yurii Chinenov"
 date: "Novemeber 16, 2017"
 output: 
    html_document:
@@ -42,9 +42,11 @@ library("org.Mm.eg.db")
 library("GenomicAlignments")
 library("RColorBrewer")
 library("ggplot2")
+library("genomation")
 library("GGally")
 library("kableExtra")# not needed for 
 library("BSgenome.Mmusculus.UCSC.mm10")
+
 #annotation section
 library(clusterProfiler)
 library(ReactomePA)
@@ -52,8 +54,12 @@ library("pathview")
 library(rGREAT)
 library(grid)
 library(gridExtra)
+```
+The data sets we use here have been derived from a chipseq experiment in mouse macrophages aimed to determine the distribution of  Glucocorticoid receptor (a DNA binding transcription factor) in macrophages treated with glucocorticoid hormone dexamethasone (D) and untreated control. The experiment has performed in duplicates. Sequenced reads were aligned with Bowtie 2 and the peaks were called with MACS2. The results - BAM file of aligned reads and BED file with called peaks were saver in  `./rep1` and `./rep2` directories. For the sake of saving computational time we limited the output  to mouse chromosome 19
 
+We will started by defining locations for BAM and BED files for each replicas using `list.file` function. All expressions here are enclosed in parenthesis to produce and immediate output. As you can see each of these variables contains a vector of locations and file names for either BAM or BED files for individual replica.
 
+```{r}
 (bam_rep1 <-  list.files(path = "./rep1", full.names = TRUE, pattern = "bam$"))
 
 (bam_rep2 <-  list.files(path = "./rep2", full.names = TRUE, pattern = "bam$"))
@@ -67,30 +73,50 @@ library(gridExtra)
 ```
 # Quality Control with ChIPQC 
 
-Now as we defined the location of our files we will perform some quality controls. Most of analysis will be performed using *ChIPQC* package.
+Now as we defined the location of our files we will perform chipseq quality controls (QC)  using *ChIPQC* package.
 ChipQC can work either with a single ChipSeq sample or an entire experiment. If you use this package for a large experiment using "real" data sets on a single computer  the entire analysis will take some time so I suggest running it overnight. 
-Bam file need to be sorted and indexed.
-Both could be achieved with, for example, `Rsamtools::sortBam()` and `Rsamtools::indexBam()` respectively
+Bam file need to be first sorted and indexed.
+Both could be achieved with, for example, `Rsamtools::sortBam()` and `Rsamtools::indexBam()` respectively.
+
+For the sake of demonstration here and thereafter we will first perform a specific operation for a single sample of file and then look at more "automated"" version 
+
+For an individual sample you run a suite of QCs by calling `ChIPQCsample` function. In the example below we provided the following arguments
+**bam_rep2[1]** - the path/filename for the bam file
+
+**chromosome** - chromosome name as defined in a bam.BED files ("chr19" in this case)
+
+**peaks** - the path/filename for a matching  BED file with peaks
+
+**Blacklist** - the path/filename for a BED file with blacklisted regions
+
+**annotation** - argument define the genome that was used for alignment
+
+`ChIPQCsample` produces an `ChIPQCsample` objects containing input parameters,  quality metrics and a GRange with peak coordinates in read counts in each peak. To extract  GRanges with peak counts use `peaks()`method. To create and HTML report use `ChIPQCreport ()` function
+
 ## ...for a single sample
 ```{r, results='hide'}
 single <- ChIPQCsample(bam_rep2[1], chromosomes = "chr19", peaks = bed_GR_rep2[1], blacklist = "mm10-blacklist.bed", annotation = "mm10")
 
+counts_single <- as.data.frame(peaks(single)) #a GRange with peak coordinates, read couns in peaks and peaks summits
+
 ChIPQCreport(object = single, reportName = "ChIPQC_single", reportFolder = "ChIPQC_single")
 ```
-##  for an experiment with multiple samples. `ChIPQCexperiment`object
-Doing it for a large experiment one by one is impractical. For an entire experiment you need to construct a `ChIPQCexperiment`
-object. This is essentially a dataframe or a csv file with the following columns:
 
-*SampleID:* Identifier string for sample
-*Tissue:* Identifier string for tissue type
-*Factor:* Identifier string for factor
-*Condition:* Identifier string for condition
-*Treatment:* Identifier string for treatment
-*Replicate:* Replicate number of sample
-*bamReads:* file path for bam file containing aligned reads for ChIP sample
-*bamControl:* file path for bam file containing aligned reads for control sample
-*ControlID:* Identifier string for control sample
-*Peaks:* path for file containing peaks for sample. Format determined by PeakCaller field or caller parameter
+##  ...for an experiment with multiple samples. `ChIPQCexperiment`object
+
+Doing it for a large experiment one by one is impractical. For an entire experiment you need to construct a `ChIPQCexperiment`
+object. This is, essentially, a dataframe or a csv file with the following columns:
+
+*SampleID:* Identifier string for a sample
+*Tissue:* Identifier string for the tissue type
+*Factor:* Identifier string for a factor
+*Condition:* Identifier string for a condition
+*Treatment:* Identifier string for a treatment
+*Replicate:* Replicate number of a sample
+*bamReads:* file path to bam file containing aligned reads for a ChIP sample
+*bamControl:* file path for bam file containing aligned reads for a control sample
+*ControlID:* Identifier string for a control sample
+*Peaks:* path for the file with peaks for a sample. The input format is determined by PeakCaller field or caller parameter
 *PeakCaller:* Identifier string for peak caller used. If Peaks is not a bed file, this will determine how the Peaks file is parsed. If missing, will use default peak caller specified in caller parameter. Possible values:
         “raw”: text file file; peak score is in fourth column
         “bed”: .bed file; peak score is in fifth column
@@ -103,7 +129,7 @@ object. This is essentially a dataframe or a csv file with the following columns
 *ScoreCol:* column in peak files that contains peak scores
 *LowerBetter:* logical indicating that lower scores signify better peaks
 
-We created one for and it is located in `chips_seq_summary.csv`
+We created one for you and it is located in `chips_seq_summary.csv`. We will load it using `read.csv()` 
 
 ```{r, collapse = T,echo = c(1,2)}
 chip <- read.csv(file = "chips_seq_summary.csv",stringsAsFactors = F)
@@ -113,9 +139,11 @@ chip %>%
   kable_styling(bootstrap_options = c("striped", "hover"),font_size = 9)
 ```
 
-Running this example will take ~ 3 minutes. For a large experiment you can run over a lunch break or overnight
+and calculate QC metrics for our entire experiment (2 replicas, two bam files in each replica)
+
+Running this example will take ~ 3 minutes. For a large experiment you can run it over a lunch break or overnight
 ```{r, results='hide', collapse =T, echo = c(2:4)}
-register(SerialParam())
+register(SerialParam()) # commented it out when parallel setup  is available
 experiment <- ChIPQC(experiment=chip, 
                      annotation="mm10", 
                      chromosomes="chr19", #comment this out if you want all chromosomes to be used. LONG! 
@@ -124,7 +152,7 @@ experiment <- ChIPQC(experiment=chip,
                      fragmentLength=125)
 ```
 ## `QCmetrics()` and `ChIPQCreport`
-You can extract a table with all quality matrices using `ChIPQC::QCmetrics()` accessor and create an HTML report with `ChIPQC::ChIPQCreport`
+You can extract a table with all quality matrices using `ChIPQC::QCmetrics()` accessor and create an HTML report with `ChIPQC::ChIPQCreport`. `peaks()`, similarly to a single sample,  accesses to count matrices for all BED files but produced a `GRangesList` as an output, that can be converted into a list of dataframe with `lapply`
 
 ```{r}
 (metrics <- QCmetrics(experiment))
@@ -136,36 +164,29 @@ ChIPQCreport(object = experiment,
              reportName = "ChIPQC_experiment", 
              reportFolder = "ChIPQC_experiment")
 
+counts_all <-  lapply(peaks(experiment), as.data.frame)
+
 ```
 ## Import of BED files. GRanges
 
-BED Files and essentially tab-separated tables and need to be first converted into a **GRanges** object. **GRanges**  is an S4 class that was introduced by **GenomicRanges** package to store coordinates of genomic features and their associated annotations. GRanges is very feature-rich class an we can spend probably a separate workshop discussing just that class and its uses. For a comprehensive treatment of GRanges see the vignette for **GenomicRanges** package at http://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesIntroduction.pdf
+Sometimes you don't want or don't need to perform quality control (for example, it has been done already) but you need to convert a preexisting BED file to GRanges.
 
-Couple of terms that I will use throughout the talk: object is a collection of variables with a set of functions that an end user allowed to perform with these variables. In S4 objects the variables are called "slots" and the functions are called "methods". You use @ or `slot()` to access slots directly, however for a well-written S4 object (in ideal worlds) you do not have to. Instead you use methods, referred to as **accessors** that let you do it. 
+BED Files and essentially tab-separated tables.  **GRanges**  is an S4 class that was introduced by **GenomicRanges** package to store coordinates of genomic features and their associated annotations. GRanges is very feature-rich class an we can spend probably a separate workshop discussing just that class and its uses. For a comprehensive treatment of GRanges see the vignette for **GenomicRanges** package at http://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesIntroduction.pdf
 
-For example, If you always use ChIPQC first, you peaks in GRanges format can be extracted from an S4 `ChIPQCexperiment` object  using `peaks()` accessor method. In addition to location and peak coordinates you also get coordinates of a summit and read count.  
+Couple of terms that I will use throughout the talk: object is a collection of variables with a set of functions that can be used be used to performs various actions with these variables. In S4 objects the variables are called "slots" and the functions are called "methods". You use @ or `slot()` to access slots directly, however for a well-written S4 object (in ideal world) you do not have to. Instead you use methods, referred to as **accessors**. to get help for a specific class use `class?` with a class name, for example `class?ChIPQCsample` or  `class?GRanges` will open a page describing  `ChIPQCsample` or `GRanges` classes.
 
-```{r}
-(peak_list <- peaks(experiment)) 
-
-#to convert this S4 into an odinary list use as.list()
-
-peak_list <- as.list(peak_list)
-
-#co convert is back to S4 use as(peak_list,"List") , notice capital "L"
-
-```
 Most of the packages that work with genomic ranges offer functions that convert BED file into GRanges. Most of these functions relies on 
-`GenomicRanges::makeGRangesFromDataFrame()` or `GenomicRanges::GRanges()`function. 
+**`GenomicRanges::makeGRangesFromDataFrame()`** or **`GenomicRanges::GRanges()`** function. 
 Not to be outdone both ChIPseeker and ChIPSeqAnno offer their own implementations
 `ChIPseeker::readPeakFile` and `ChIPpeakAnno::toGRanges`. `toGranges` is more robust, it produces different annotations depending on input format, it also knows how to work with genomes and transcriptomes to extract various Genomic features. `help(toGRanges)` for details.
 
 ```{r}
 #for a single BED file
 (single_BED <- readPeakFile(peakfile = "./rep2/02_GR_D_chr19_rep2.bed"))
+```
 
-#this is impractical and error-prone if you have many files. We will use file lists that we created above and sapply function to cycle through all bedfiles and read them all at once. This will produces named lists of Gene ranges. You can access individual elements either by index or by a name
-
+Importing BED files one by one is  impractical and error-prone when you have many files. We will use file lists that we created at the beginning of this tutorial  and `sapply` function to cycle through all bedfiles for each replica to produce a named lists of Gene ranges. You can access individual elements either by index or by a name
+```{r, collapse = T}
 GR_peaks_rep1 <- sapply(bed_GR_rep1,readPeakFile)
 GR_peaks_rep2 <- sapply(bed_GR_rep2,readPeakFile)
 
@@ -177,9 +198,12 @@ names(GR_peaks_rep2) <- gsub("/","_",substr(names(GR_peaks_rep2),start = 3,stop 
 
 str(GR_peaks_rep2[[2]], max.level = 2)
 ```
+
 Very briefly GR_peaks_rep2[[2]] is a `GRange` object (S4)  with 6 slots. I would like to focus your attention on one `@elementMatadata`. This is a dataframe that contains information on the right. You can access it using `mcols()` accessor. Before we proceed further I would like to prettify  this output by replacing the default column name
+
 ## Accsessing basic peak information. `mcols()`,`length()`,`width()`
-```{r,fig.height= 4,fig.width = 5}
+
+```{r, collapse = T, fig.height= 4,fig.width = 5}
 mcols(GR_peaks_rep2[[2]])
 
 new_names=c("id","summit","size","score","qval")
@@ -188,7 +212,11 @@ for(i in 1:length(GR_peaks_rep1)){colnames(mcols(GR_peaks_rep1[[i]])) <- new_nam
                                   colnames(mcols(GR_peaks_rep2[[i]])) <- new_names                                                                  }
 
 names(mcols(GR_peaks_rep2[[2]])) # just to make sure we actually changed the names
+```
 
+Lets look at basic peak characteristics in our dataset(s)
+
+```{r, collapse = T}
 #how many peaks do we have?
 length(GR_peaks_rep2[[2]])
 
@@ -234,6 +262,7 @@ txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
    TxDb = txdb, 
    annoDb = "org.Mm.eg.db"))                                
 ```
+
 **genomicAnnotationPriority** - assuming exclusive annotation categories define the order of assignment of a feature to a specific category
 
 **TxDb** - This argument take a TxDb object that contains information about specific annotation track created by `GenomicsFeatures`. For an extensive treatment of Bioconductor annotation infrastructure see http://bioconductor.org/help/workflows/annotation/Annotation_Resources/
@@ -245,7 +274,6 @@ TxDb family of packages contain information about gene and transcript models. Yo
 
 `annotatePeak` produces an S4 object of `csAnno`class - see `help("csAnno-class")`
 ```{r}
-help("csAnno-class")
 str(ann_single, max.level = 4)
 ```
 A dataframe with feature-level frequencies is `@annoStat` slot. The most important information for us is located in the `@anno` slot. This slot contains an extended GRange object that now contains additional information regarding individual peaks. You can access it as any other slots in S4 objects with *@*. You can also convert it into a data frame that you can save in some human readable format.
@@ -256,20 +284,23 @@ ann_single@annoStat
 #ann_single@anno you can try it but the output is ugly
 
 a <- as.data.frame(ann_single@anno)
+
+head(a)
+
 ```
 ## `plotAnnoPie()`, `plotAnnoBar()`, `upsetplot()`
 
 Now, you can visualize this information in a variety of ways using `ChIPSeeker::plotAnnoPie`, `ChIPSeeker::plotAnnoBar`
 Both these function rely on baseR and therefore, can take a bunch of additional graphic parameters - see `help(par)`.
 
-```{r,fig.height= 2,fig.width = 5}
+```{r,fig.height= 2,fig.width = 6}
 plotAnnoPie(ann_single)
 ```
 ```{r,fig.height= 2,fig.width = 6}
 plotAnnoBar(ann_single)
 ```
 Because these annotation categories are exclusive the annotation will be performed based on the priority shown in the legend. To work around this `ChIPseeker` offer `ChIPSeeker::upsetplot` function. `ChIPSeeker::upsetplot` is a wrapper from the original `UpSetR::upset` function and therefore takes all arguments of an original function. Only the first argument (a **csAnno** object) is required, the rest is prettifying output.
-```{r,fig.height= 5,fig.width = 7}
+```{r,fig.height= 6,fig.width = 7}
 ups <- upsetplot(ann_single,sets.bar.color = c("#d95f0e", "#fee0d2", "#98D277","#6F9E4C", "#fc9272", "#9ecae1", "#ffeda0"),text.scale = 2, point.size = 5)
 ```
 
@@ -287,10 +318,11 @@ str(GR_peaks_rep1_anno, max.level = 3)
 ```
 You can use `plotAnnoBar()` to plot multiple annotation objects on the same scale
 
-```{r, fig.height = 3}
+```{r, fig.height = 2}
 #calling plotAnno functions on the list of csAnno objects will produce combined plots
 plotAnnoBar(GR_peaks_rep1_anno)
-
+```
+```{r, fig.height = 3}
 #or you can combine multiple csAnno objects to plot them at the same time
 plotAnnoBar(c(GR_peaks_rep1_anno,GR_peaks_rep2_anno), title = "Some peaks")
 ```
@@ -317,11 +349,12 @@ The output is a list with 7 elements
 
 **`$venn_cnt`**           - an object of VennCounts, used to plot Venn diagrams - more about later
 **`$peaklist`**           - a list consists of all overlapping peaks or unique peaks
-```..$ GR_peaks_rep2..2..                     :Formal class 'GRanges' - peaks unique for set 2
-  
+
+   ..$ GR_peaks_rep2..2..                     :Formal class 'GRanges' - peaks unique for set 2
+ 
    ..$ GR_peaks_rep1..2..                     :Formal class 'GRanges' - peaks unique for set 1
   
-   ..$ GR_peaks_rep1..2..///GR_peaks_rep2..2..:Formal class 'GRanges' - overlapping peaks``` 
+   ..$ GR_peaks_rep1..2..///GR_peaks_rep2..2..:Formal class 'GRanges' - overlapping peaks
 
 **`$uniquePeaks`**        - an object of GRanges consists of all unique peaks 
 
@@ -331,16 +364,16 @@ The output is a list with 7 elements
 
 **`$overlappingPeaks`**	  - a list of data frame consists of the annotation of all the overlapped peaks and the distance between them
 
-     ** A bug here** when constructing this dataframe  column names were duplicated that might affect your downstream analysis!!!** 
+     **A bug here? when constructing this dataframe  column names were duplicated that might affect your downstream analysis!!!** 
 
 **`all.peaks`**           - a list of GRanges object which contain the input peaks with formatted row names.
 
 ## Makig Venn Diagram with ChIPpeakAnno::makeVennDiagram
 
 Now, we can visualize these results by plotting a Venn diagram using `ChIPpeakAnno::makeVennDiagram`. This is an argument -heavy function that can either take the output of `findOverlapsOfPeaks` function directly or you can feed it a list of GRanges corresponding to peaks that you want to overlap. In this case it will call `findOverlapsOfPeaks`, determine the overlap and also test whether the overlap is significant by either hypergeometrics test or permutation test. See `help(makeVennDiagram)` for a description of all arguments. The output is a very publishable Venn diagram
-```{r, fig.align = "left", fig.height=3,fig.width=3}
+```{r, fig.align = "left", fig.height=2,fig.width=2}
 par(mfrow=c(1,1))
-venn <- makeVennDiagram(rep_ol,totalTest=1000, scaled=T, NameOfPeaks=c("GR_Dex_rep1", "GR_Dex_rep2"), fill=c("blue","cyan"),cex=2, cat.cex=1,fontface="bold", fontfamily="Arial",cat.fontface="bold",cat.fontfamily="Arial",main="GR_Dex, rep1 versus rep2")
+venn <- makeVennDiagram(rep_ol,totalTest=1000, scaled=T, NameOfPeaks=c("GR_Dex_rep1", "GR_Dex_rep2"), fill=c("blue","cyan"),cex=1.5, cat.cex=1,fontface="bold", fontfamily="Arial",cat.fontface="bold",cat.fontfamily="Arial",main="GR_Dex, rep1 versus rep2")
 ```
 Based on this we have a very good overlap in peak locations. This, however does not tell us much about peak sizes. So, what we can do here is take a union of peaks from both replicas, count the number of reads in each of those peaks and look at correlation in read numbers that fell into each interval.
 
@@ -351,33 +384,42 @@ peak_u <- union(GR_peaks_rep1[[2]], GR_peaks_rep2[[2]])
 
 #Counting reads in peaks, GenomicAlignments::summarizeOverlaps 
 
-Now, we will count our reads that hit these peaks using our bam files. There are several (many) ways of doing this. I will only mention two `Rsamtools::countBAM()` and `GenomicAlignments::summarizeOverlaps` function. The later is more feature-rich and more user-friendly. We will use **GGally** package to plot the summary of pairwise correlation analysis of read counts in peaks in all 4 data sets
-```{r}
-   require("GenomicAlignments")
-   require("GGally")
+Now, we will count our reads that hit these peaks using our bam files. There are several (many) ways of doing this. I will only mention two `Rsamtools::countBAM()` and `GenomicAlignments::summarizeOverlaps` function. `summarizeOverlaps` is the method  for `GAlignments` . 
 
-   count <- GenomicAlignments::summarizeOverlaps (peak_u, c(bam_rep1,bam_rep2), mode=Union,inter.feature=F) #counting reads in peak_u for all bam files
+
+We will use **GGally** package to plot the summary of pairwise correlation analysis of read counts in peaks in all 4 data sets
+```{r}
+   
+   (count <- GenomicAlignments::summarizeOverlaps (peak_u, c(bam_rep1,bam_rep2), mode=Union,inter.feature=F)) #counting reads in peak_u for all bam files
    #output is a class 'RangedSummarizedExperiment'
    
-   count_tab <- as.data.frame(assay(count)) # assay() is an accessor for class 'RangedSummarizedExperiment'
-
+   count_tab <- as.data.frame(assay(count)) # assay() is an accessor for class 'RangedSummarizedExperiment' that gets you the count table
+   
+   head(count_tab) 
+```   
+   
+as created this table does not references peak names. if you want names to be added you can create them from  `peak_u` as following
+`count_tab$peakID <- paste0(peak_u@seqnames,":",peak_u@ranges@start,"-",(peak_u@ranges@start+peak_u@ranges@width-1))`
+you would have to adjust `ggpairs` count_tab accordingly to exclude peakID column from calculations - `count_tab[,1:(ncol(count_tab)-1)]`
+```{r}   
    plot_tab <- GGally::ggpairs(count_tab,
                                upper = list(continuous = wrap('cor', method = "spearman", size = 7, color="black"))) 
    plot_tab
     
-   #sorting peaks in a GRange based on the order the read count number in one of the replicates
+#sorting peaks in a GRange based on the order the read count number in one of the replicates
+
    peak_u <- peak_u[order(count_tab$`02_GR_D_chr19_rep2.bam`,decreasing = T)]
 ```
 
 # Constructing read distrubition heatmaps with **genomation**
 
-Now, lets construct read density heatmap and average read density distributions
+Now, lets construct read density heatmap and average read density distributions using `genomation` package. Both ChipPeakAnnot and Chipseeker have similar function but `genomation`implementation is more straightforward and requires minimal data transformation before the analysis 
+
+First we create a list of scorematricies (coverage matrices) for all bam files in both replicates (defined in **target** argument below)
+The function needs to know where to count reads, in our case we want to use `peak_u` GRange that contains the union of peaks for the hormone treated macrophages  for both replicas (**window=peak_u**). **type=** specifies the type of target file - bam or bigWig.
+**bin.num** is needed only when the widths of you peaks are not equal. In this case all peaks are split into **bin.num** bins and the coverage is calculated per bin rather than per base. Finally, setting **rpm** to **TRUE** will perform library size normalization.
 
 ```{r}
-library(genomation)
-
-#if you look at your GR_peaks_rep1
-
 mat <- ScoreMatrixList(targets = c(bam_rep1,bam_rep2), #vector with the names/path to our bam files
                        windows = peak_u ,              # GRange with intervals
                        type="bam",                     # Type of the files in targets (bam and bigWig are supported)
@@ -389,7 +431,11 @@ mat <- ScoreMatrixList(targets = c(bam_rep1,bam_rep2), #vector with the names/pa
 names(mat) # too long. replace them by shorter names
 
 names(mat) <- c("GR_Un1","GR_Dex1","GR_Un2","GR_Dex2")
+```
 
+`multiHeatMatrix` plots multiple heatmaps from a `ScoreMatrixList` object created above. This function takes many arguments (see the help page) of which I am only using a few. **col=** changes the color of the heatmap from its default matlab scheme. **common.scale = T** will draw the color intensities on the same scale. The scale will be determined by minimum of **all** matrices and maximum of **all** matrices. **winsorize =** "determines the upper and lower percentile values to limit the extreme values. For example, c(0,99) will limit the values to only 99th percentile for a matrix, everything above the 99 percentile will be equalized to the value of 99th percentile.This is useful for visualization of matrices that have outliers.(help page)"
+
+```{r}
 mat_multy <- multiHeatMatrix(mat,
                              #order = T,
                              col=brewer.pal(9, 'BuPu'), 
@@ -441,7 +487,7 @@ mm10 <- BSgenome.Mmusculus.UCSC.mm10
 (peak_seq <- getSeq(mm10,peak_u))
 
 ```
-now, if we want to export these as fasta file we need to name individual sequences. The best way I know is to stick the chromosome name and coordinates as a sequence names. Names of elements in most R objects are accessed using `names()` and are replaced using `names() <-`. Here I am using  **peak_u** variable to create names our name using `paste0()`.  
+`getSeq` returns an object of class `DNAStringSet` (Biostrings package).If we want to export this object as a fasta file  we need to provide names for individual sequences. We will use the same approach as before - concatenate the chromosome name and start/end coordinates as a sequence names. Names of elements in most R objects are accessed using `names()` and are replaced using `names() <-`. Here I am using  **peak_u** variable to create our name using `paste0()`.  
 
 ```{r}
 names(peak_seq) <- paste0(as.vector(peak_u@seqnames),":",start(peak_u),"-",end(peak_u))
@@ -457,32 +503,28 @@ writeXStringSet(x = peak_seq, filepath="gr_d_union.fasta", append=FALSE,
                 compress=FALSE, compression_level=NA, format="fasta")
 
 ```
+This fasta file can be used as an input for motif-predicting software such as MEME-chip (http://meme-suite.org/tools/meme-chip). I did just that. You can access the entire results directory  at  `./appMEMECHIP_4.12.01509807486762-571624097/meme-chip.html` 
+
+<embed src="./appMEMECHIP_4.12.01509807486762-571624097/meme-chip.html" width="900" height="900" type='application/html'>
+
 
 #Functional Peak annotation
 
-Functional annotation of Chip/Atacseq outputs attempt to link peaks (binding or DNA accessibility events) to genes that might be regulated by those events. Gene, or rather TSS proximity still remains a leading metric. Several approaches were developed to improve this metric but generated prediction must to be treated with caution. Pure proximity approach ignores long-range interactions; weighting by RNAseq/microarray data focuses on transcription response at a given time and therefore ignores temporal dynamics and still does not help us with long-range interactions; using TADs(trans-activating domains) is essentially a proximity analysis by other name and does not provide gene-level resolution.
-
-**Additional complications:**
-
-High technical variability
-
-High variability in peak sets called by different methods
- 
-What is a "peak"? Using the term to describe histone or Pol2 density distributions, for example, is misleading                        
+Functional annotation of Chip/Atacseq outputs attempts to link peaks (binding or DNA accessibility events) to genes that might be regulated by those events. Genes, or rather, TSS proximity still remains a common metric. Several approaches were developed to improve this metric but generated prediction must to be treated with caution. Pure proximity approach ignores long-range interactions; weighting by RNAseq/microarray data focuses on transcription response at a given time and therefore ignores temporal dynamics and still does not help us with long-range interactions; using TADs(trans-activating domains) is essentially a proximity analysis by other name and does not provide gene-level resolution.
 
 Analysis of peak/gene association will require full dataset, fortunately we will not need bam file for this
 
-This is is two-step process: linking peaks to genes and then using this gene as a source list for downstream set enrichment or pathway analysis.
+This is is two-step process: linking peaks to genes and then using these genes as a source list for downstream set enrichment or pathway analysis.
 
-The fists step is essentially  defined by your existing genome annotation. However beyond associating peaks with genes you can do a number of other things, as long as you know what IS in existing genome annotation. For example you can look at association between your peaks and disease-relevant SNPs or CNV; or, after you run motif prediction, you can look at association between your predicted sites and disease-related SNPs;  your peaks and evolutionary conserved regions, or the opposite most divergent regions in your species; your peaks and other experimentally determined binding sites from ENCODE or other repositories (try ORegAnno); your peaks and PatScan entries (patented sequences database)?
+The fists step is essentially  defined by your existing genome annotation. However, beyond associating peaks with genes you can do a number of other things, as long as you know what IS in your existing genome annotation. For example, you can look at associations between your peaks and disease-relevant SNPs or CNVs; or, after you run motif prediction, you can look at associations between your predicted sites and disease-related SNPs;  your peaks and evolutionary conserved regions, or the opposite most divergent regions in your species; your peaks and other experimentally determined binding sites from ENCODE or other repositories (try ORegAnno); your peaks and PatScan entries (patented sequences database)? There is really no limit here
 
 We will start by using tools that are provided by the **ChIPseeker**. The advantage here is that Guangchuang Yu who authored this package also created  several packages that deal with Gene set enrichment analysis and GSEA, including **DOSE**, **clusterProfiler** and **ReactomePA** which provides a certain levels of integration and continuity. 
 
-As an input we will use all peaks from Dex-treated macrophages
+As an input we will use all peaks from Dex-treated macrophages, not just chromosome 19. The workflow, however is similar
 
 ## Loading and processing a full dataset of Glucocorticoid receptor peaks in a hormone-treated macrophages.
 ```{r, fig.height= 2,fig.width = 7  }
-gr_full <- readPeakFile(peakfile = "./full_data/02_GR_D_rep2.bed") # reading a full size dataset
+gr_full <- readPeakFile(peakfile = "./full_data/02_GR_D_rep2.bed") # reading a dataset
 
 gr_full_anno <- annotatePeak(gr_full, tssRegion=c(-2000, 500), TxDb=txdb, annoDb="org.Mm.eg.db") # annotate the peaks
 
@@ -496,9 +538,9 @@ View(gr_table)
 ```
 ## Extracting per-peak annotation.
 
-Because I referred specifically to mouse annotation database package - `annoDb="org.Mm.eg.db"` we have additional columns with gene ID, If you omit it the only annotation provided will be **geneID** column that contains ENTREZ IDs. Besides this column we now have **transcriptID** with transcript IDs from UCSC browser, ENSEMBL IDs, gene symbols and gene descriptions. 
+Because I referred specifically to mouse annotation database package - `annoDb="org.Mm.eg.db"` we now have additional columns with gene IDs, If you omit it the only annotation provided will be **geneID** column that contains ENTREZ IDs. Besides this column we now have **transcriptID** with transcript IDs from UCSC browser, ENSEMBL IDs, gene symbols and gene descriptions. 
 
-Distance to TSS could be used for further data sectioning, and peaks scores or log-transformed p-values could be used for ranking 
+Distance to TSSs could be used for further data sectioning, and peaks scores or log-transformed p-values could be used for peak ranking 
 
 ```{r, fig.height=4,fig.width = 6 }
 hist(gr_table$distanceToTSS, xlim=c(-200000,200000),breaks = 1000) #quick and dirty plot of peak distribution relative to the TSS 
@@ -507,9 +549,9 @@ hist(gr_table$distanceToTSS, xlim=c(-200000,200000),breaks = 1000) #quick and di
 
 # Functional annotation of peak-associated genes with **clusterProfiler** 
 
-There are multiple R packages that perform gene set enrichment analysis. I will use two of them today:  **clusterProfiler**  and **rGREAT**. The first is a full-feature package with a number of visualization tools. The other is an R programmatic interfaces for GREAT (http://great.stanford.edu/public/html/) 
+There are multiple R packages that perform gene set enrichment analysis. I will use two of them today:  **clusterProfiler**  and **rGREAT**. The first is a full-feature package with a number of visualization tools. The second one is an R web access interfaces for GREAT at http://great.stanford.edu/public/html/
 
-**clusterProfiler** is another tool authored by Guangchuang Yu at School of Public Health, The University of Hong Kong. The package provides a collection of functions for GO enrichment analysis, KEGG pathways analysis, disease association analysis vie **DOSE** - another of his packages, Reactome pathways analysis (**ReactomePA** by the same author). It also provides an interface to DAVID, a set of tools for MSigDB analysis (has to be installed locally) and a set of function for any list enrichment analysis. In addition, the package provides an impressive set of visualization tools., Finally, if ranked list of genes is available **clusterProfiler** provides few tools firs GSEA analysis
+**clusterProfiler** is another tool authored by Guangchuang Yu at School of Public Health, The University of Hong Kong. The package provides a collection of functions for GO enrichment analysis, KEGG pathways analysis, disease association analysis vie **DOSE** - another of his packages, Reactome pathways analysis (**ReactomePA** by the same author). It also provides an interface to DAVID (https://david.ncifcrf.gov/), a set of tools for MSigDB analysis (has to be installed locally - http://software.broadinstitute.org/gsea/msigdb) and a set of function for any list enrichment analysis. In addition, the package provides an impressive set of visualization tools. Finally, if ranked list of genes is available **clusterProfiler** provides few tools for GSEA analysis
 
 ##Input file formats: 
 
@@ -519,9 +561,10 @@ There are multiple R packages that perform gene set enrichment analysis. I will 
 
 **rGREAT** - a GRange
 
-**enrichR** - a vector of gene symbols (HGNC gene names)
 
 ## Mapping gene IDs back and forth with `select()`
+
+Before we proceed, below is a general approach for converting various gene identifiers available via org.db packages.
 
 Where to get ENTRES IDs? If you used `annotatePeak` for your annotation you will find it in  `$geneid` column of  `@anno` slot of your `csAnno` object or in the annotation table we have created earlier. Now, if you used something else you can convert your IDs into ENTREZ IDs using an appropriate `org.db` package for your species as following:
 
@@ -533,17 +576,17 @@ genelist1  <- select(org.Mm.eg.db, keys=genelist, columns=c('ENTREZID'), keytype
 genelist1
 ```
 here `select` is a methods that allows you to extract data from annotations
-**keys =** contains vector of items whose IDs you want to convert (in this case here SYMBOL)
+**keys =** contains vector of items whose IDs you want to convert (in this case a vector of gene SYMBOLs)
 **keytype ** tells R what kind of input your provide - in this case gene **SYMBOL**
 **columns ** tells R what you are looking for (in this case **ENTREZID**)
 
-you can check what kind of **keytypes** and **columns** your annotation object has by calling `ketype` or `columns` functions with your object name, like so `keytypes(org.Mm.eg.db)`
+you can check what kind of **keytypes** and **columns** your annotation object has by calling `ketype` or `columns` functions with your object name -  `keytypes(org.Mm.eg.db)`
 
-Now, when we know know how to map gene IDs back and forth we are ready to use **ClusterProfiler**
+Now, when we know how to map gene IDs back and forth we are ready to use **ClusterProfiler**
 
 ##GO Enrichment
 
-`enrichGO` function calculates the enrichment of annotated genes in GO categories and produces an object of 'enrichResult' class. The table with enriched GO categories is in `@result` slot
+`enrichGO` function calculates the enrichment of annotated genes in GO categories and produces an object of 'enrichResult' class. The table with enriched GO categories is in `@result` slot. If the search is to slow on your system, uncomment the `load` command to load a precomputed result of this analysis
 
 ```{r}
 gr_go <- enrichGO(gene          = unique(gr_table$geneId), #your list of genes
@@ -555,11 +598,12 @@ gr_go <- enrichGO(gene          = unique(gr_table$geneId), #your list of genes
                 pvalueCutoff  = 0.0001,
                 qvalueCutoff  = 0.001,
                 readable      = TRUE)
+#load(file="gr_go.rda")
 
 str(gr_go,max.level=2)#  Table with the results is in @result slots
 ```
 ## Output visualization with `dotplot()` and `barplot()`
-These table can be visualized in a variety of ways. The package provides two functions `dotplot` and `barplot` that show top GO categories sorted by the ratio of genes in your annotation to a total number of genes
+The results of GO analysis can be visualized in a variety of ways. The package provides two functions `dotplot` and `barplot` that show top GO categories sorted by the ratio of genes in your annotation to a total number of genes
 ```{r, fig.height=5,fig.width=10}
 dotplot(gr_go,           #enrichResult object
         showCategory=20, #top categories sorted by adjusted pValue
@@ -570,7 +614,7 @@ barplot(gr_go, showCategory=20)
 ```
 ## Writing your own function for data visualization
 
-This output I find somewhat unsatisfactory as far as data visualization goes. If I want to show this data graphically I prefer to actually show p values explicitly. Below is my version of the barplot  function(`bar2`) below. It takes two arguments: the name of your `enrichResult` object and the number of top categories to plot (10 by default)  
+This output I find somewhat unsatisfactory as far as data visualization goes. If I want to show this data graphically I prefer to actually show p values explicitly rather than use colors. Below is my version of the barplot  function(`bar2`). It takes two arguments: the name of your `enrichResult` object and the number of the top categories to plot (10 by default)  
 
 ```{r,fig.height=4,fig.width=10}
 bar2 <- function( gene_tab,N=10){
@@ -600,7 +644,7 @@ bar2(gr_go,15)
 ```
 ### Subsetting peaks. Annotating peaks located near the TSS
 
-We can section our peak collection by distance or peak quality to see how that might affect the enrichment results. Here, I select all peak that are within ~7000 bp from the TSS and use my `bar2` function to visualize the results
+We can section our peak collection by distance or peak quality to see how that might affect the enrichment results. Here, I select all peak that are within ~7000 bp from the TSS and use my `bar2` function to visualize the results. To see where the 7000 bp came from run `quantile(abs(gr_table$distanceToTSS))` (it is the first quantile). Similarly, if the analysis takes to long uncomment `load` command to acquire  precomputed results
 
 ``` {r,fig.align = "left", fig.height=4,fig.width=10}
 gr_10000 <- gr_table[ abs(gr_table$distanceToTSS) < 7183,]
@@ -615,11 +659,13 @@ gr_go_10000 <- enrichGO(gene = unique(gr_10000$geneId), #your list of genes
                 qvalueCutoff  = 0.001,
                 readable      = TRUE)
 
+#load (file="gr_go_10000")
+
 bar2(gr_go_10000,15)
 ```
 ### Visualising overlap between GO categories, `cnetplot()`
 
-Many of these categories are fairly similar, at least, by name. `Clusterprofiler` provides a function `cnetplot()`that is based on `netplot()` from `igraph` package that builds a network plot that shows how genes are shared between individual GO categories. Those who want to see how this function operate check authors' Github() https://github.com/Bioconductor-mirror/DOSE/blob/master/R/cnetplot.R ) 
+Many of identified GO categories are fairly similar, at least, by name. `Clusterprofiler` provides a function `cnetplot()`that is based on `netplot()` from `igraph` package that builds a network plot that shows how genes are shared between individual GO categories. Those who want to see how this function operate check the authors' Github() https://github.com/Bioconductor-mirror/DOSE/blob/master/R/cnetplot.R ) 
 
 ```{r, fig.align = "left", fig.height=8, fig.width=10}
 #calls netplot() function from iGraph
@@ -633,8 +679,8 @@ net <- cnetplot(gr_go_10000, showCategory=5,
 
 ### Overlaying gene expression information 
 
-This function allow plotting a variety of attributes over nodes using `foldChange`. For example, if you have expression data correlating with the ChipSeq experiment you can use it here. Now, here comes one of peculiarities of the package: for gene lists with associated values - fold changes, ranks, p values
-the package uses named vectors, with gene names as vector names. We have a fold change data for genes regulated by hormones in macrophages
+This function, among other things, allow plotting a variety of attributes over nodes using `foldChange`. For example, if you have expression data correlating with the ChipSeq experiment you can use it here. Now, here comes one of peculiarities of the package: for gene lists with associated values - fold changes, ranks, p values,
+the package uses named vectors, with gene ENTREZ IDs as  names. We saved on a disk fold change data for genes regulated by hormones in macrophages
 
 ```{r, fig.align = "left", fig.height=8, fig.width=8}
 #NetPathMiner function plotCytoscapeGML() export in cytoscape readable format
@@ -659,7 +705,7 @@ Finally, you can plot a semi-interactive network plot by setting `fixed ` argume
 
 ## KEGG
 ClusterProfiler also provides tools for pathway analysis using KEGG (Kyoto  Kyoto Encyclopedia of Genes and Genomes). Because Bioconductor KEGG.db has not being updated since 2012 Clusterprofiler downloads the database from the source. 
-In keeping with the convention the function for this is `enrichKEGG` and it produces `enchirResult` object that you can use to visualize the output in the same way.
+In keeping with the convention the function for KEGG enrichment analysis is `enrichKEGG` and it produces `enchirResult` object that you can use to visualize the output in the same way.
 ```{r,fig.height=5, fig.width=8} 
 kegg <- enrichKEGG(gene         = unique(gr_10000$geneId),
                    organism     = 'mmu',
@@ -698,16 +744,16 @@ Alternatively by setting `kegg.native = F` you can produce a graphviz diagram
 ##Additional tools. Peak annotation with GREAT 
 
 GREAT (the Genomic Regions Enrichment of Annotations Tool, Nature Biotechnology 28,495) is a peak annotation tools that combine peak annotation with gene set enrichment analyses using a large number of gene set databases beyond GO and KEGG.
-GREAT also allows for several methods of associating peaks with genes. GREAT introduce a notion of a gene "regulatory domain" and treat each peaks (genomic region as they call them) within such a domain to be associated with **all** genes that belong to the same domain. "GREAT assigns each gene a regulatory domain consisting of a **basal
+GREAT introduces a notion of a gene "regulatory domain" and treat each peaks (genomic region as they call them) within such a domain as associated with **all** genes that belong to the same domain. "GREAT assigns each gene a regulatory domain consisting of a **basal
 domain** that extends 5 kb upstream and 1 kb downstream from its transcription start site (denoted below as 5+1 kb), and an extension up to the basal regulatory domain of the nearest upstream and downstream genes within 1 Mb. These values can be set by a user." (NB, 28, 495). 
 
 ![Diference between hypergeometric and binomial testing in GREAT](./GREAT_reg_regions.png){ width=100%}.
+This image was taken from the Nature Biotechnology paper above.
 
 ### Submitting a job
-GREAT is available as a web-based tool at http://great.stanford.edu/public/html/index.php. There is also an R interface that allows automating queries and processing results via **rGREAT** package on Bioconductor. Since the package uses GREAT webserver internet connection is needed.
+GREAT is available as a web-based tool at http://great.stanford.edu/public/html/index.php. There is also an R interface that allows automating queries and processing results via **rGREAT** package on Bioconductor. Since the package uses GREAT webserver internet connection is needed. In case the server is down and you do not have internet connection uncomment the `load` call to obtain precomputed results.
 
 ```{r}
-
 gr_great <- submitGreatJob(gr_full, bg = NULL,
     species               = "mm10",
     includeCuratedRegDoms = TRUE,
@@ -721,6 +767,8 @@ gr_great <- submitGreatJob(gr_full, bg = NULL,
     request_interval = 100,
     max_tries = 10,
     version = "default")
+
+#load(file="gr_great.rda")
 
 ```
 ![GREAT Gene region association rules](./gene_region_association_rules.png){width=100%}.
@@ -736,7 +784,7 @@ res <-  plotRegionGeneAssociationGraphs(gr_great)
 res_dat <- as.data.frame(res)
 ```
 
-To look at available onthologies to download use `rGREAT::availableOntologies` with the name of the GREAT job as an argument
+To look at available onthologies  use `rGREAT::availableOntologies` with the name of the GREAT job as an argument
 
 ```{r}
 (ont <- availableOntologies(gr_great))
@@ -755,6 +803,7 @@ retrieving all results for each categories using  `sapply` function. Which produ
 
 ```{r, fig.height=4, fig.width=10}
 tab1 <- sapply(category,function(x)getEnrichmentTables(gr_great, category = x))
+
 
 str(tab1, max.level = 1)
 
@@ -787,9 +836,9 @@ bar3(tab1$'Pathway Data'$`MSigDB Pathway`)
 ```
 ### Sumarizing the results on a single figure with "grid:arrange"
 
-   Looks good, but we have a  bunch of these tables and we want to create this graphic summary of all of them. So, in the end we would like to apply all  the same function (`bar3`) over elements of a list, which again suggest a use of some of the apply function 
+   Looks good, but we have a bunch of these tables and we want to create graphic summary of all of them. So, in the end we would like to apply all  the same function (`bar3`) over elements of a list. This is yet another task easily achieved by some `apply` function 
 First we will "flatten" our list non-recursively to gather all out dataframe at the top level, and then cycle through the list using `mapply`
-that runs an anonymous function that takes two arguments - the name of the list, and names of individual data frames from this list. Then it passes the first argument to `bar3` that plots the bar graph and the second argument to `ggtitle` that adds a title to each bargraph. This creates a list of ggplot objects that you can either visualize or save as a pdf file. To place all ggplots on the same page, rather then an individual page I use `gridExtra::grid.arrange` function.     
+that runs an anonymous function with two arguments - the name of the list, and names of individual data frames from this list. Then it passes the first argument to `bar3` that plots the bar graph and the second argument to `ggtitle` that adds a title to each bargraph. This creates a list of ggplot objects that you can either visualize or save as a pdf file. To place all ggplots on the same page, rather then an individual page I use `gridExtra::grid.arrange` function.     
 ``` {r, results='hide'}
 list <- unlist(tab1, recursive = F)
 
